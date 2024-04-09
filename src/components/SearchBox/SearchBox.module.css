@@ -1,0 +1,25 @@
+.searchWrapper {
+  width: 390px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: relative;
+}
+
+.input {
+  padding: 8px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.icon {
+  position: absolute;
+  left: 360px;
+  top: 54px;
+}
+
+.searchText {
+  display: flex;
+  margin-bottom: 5px;
+  font-weight: 500;
+}

@@ -1,0 +1,29 @@
+.contactWrapper {
+  border: 2px solid black;
+  border-radius: 10px;
+  display: flex;
+  width: 350px;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteBtn {
+  width: 120px;
+  height: 50px;
+}
+
+.contactIcon {
+  margin-right: 10px;
+}
+
+.contactText {
+  font-style: 40px;
+  font-weight: 500;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
