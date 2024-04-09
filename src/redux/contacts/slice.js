@@ -3,8 +3,10 @@ import {
   apiDeleteContacts,
   apiGetContacts,
   apiPostContacts,
-} from "./contactsOps";
-import { selectContacts, selectNameFilter } from "./selectors";
+} from "./operations";
+import { selectContacts } from "./selectors";
+import { selectNameFilter } from "../filters/selectors";
+// import { selectContacts, selectNameFilter } from "./selectors";
 
 const INITIAL_STATE_CONTACTS = {
   items: [],
