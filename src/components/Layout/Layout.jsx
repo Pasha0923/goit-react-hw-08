@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
           style: {
             background: "#f9e3cc",
             color: "#f57a38",
-            marginTop: "25px",
+            marginTop: "40px",
           },
         }}
       />

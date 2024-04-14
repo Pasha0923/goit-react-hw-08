@@ -63,8 +63,10 @@ const phoneBookSlice = createSlice({
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectNameFilter],
   (contacts, name) =>
-    contacts.filter((item) =>
-      item.name.toLowerCase().includes(name.toLowerCase())
+    contacts.filter(
+      (item) =>
+        item.name.toLowerCase().includes(name.toLowerCase()) ||
+        item.number.toLowerCase().includes(name.trim().toLowerCase())
     )
 );
 

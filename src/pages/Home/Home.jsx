@@ -6,9 +6,9 @@ const Home = () => {
       <Helmet>
         <title>Home</title>
       </Helmet>
-      <p>
+      <h1>
         Welcome to your <FaPhone size={24} color="#ef5c0d" /> phonebook! <br />
-      </p>
+      </h1>
     </div>
   );
 };

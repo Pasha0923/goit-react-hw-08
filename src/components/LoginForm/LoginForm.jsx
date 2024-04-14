@@ -60,7 +60,7 @@ const LoginForm = ({ onLogin }) => {
           aria-label=""
           title="Click to register user"
         >
-          Sign In😁
+          Sign In😉
         </button>
       </Form>
     </Formik>
