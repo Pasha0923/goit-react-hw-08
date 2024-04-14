@@ -1,74 +1,72 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import {
-  apiDeleteContacts,
-  apiGetContacts,
-  apiPostContacts,
-} from "./operations";
+import { apiAddContact, apiDeleteContact, apiGetContacts } from "./operations";
 import { selectContacts } from "./selectors";
 import { selectNameFilter } from "../filters/selectors";
-// import { selectContacts, selectNameFilter } from "./selectors";
 
 const INITIAL_STATE_CONTACTS = {
-  items: [],
-  loading: false,
-  error: null,
+  contacts: [],
+  isLoading: false,
+  isError: false,
 };
 
-// Функція createSlice() генерує Action creator і reducer одночасно
-const detailsContactsSlice = createSlice({
-  name: "detailsContacts",
+const phoneBookSlice = createSlice({
+  name: "phonebook",
   initialState: INITIAL_STATE_CONTACTS,
   extraReducers: (builder) =>
     builder
+      // 1. Опрацювання 3-х станів санки (apiGetContacts) на отримання контактів
       .addCase(apiGetContacts.pending, (state) => {
-        // запишемо до кожного статусу функцію редьюсер яка буде опрацьовувати логіку
-        state.loading = true; // ввімкнули індикатор завантаження
-        state.error = false; // під час кожного нового запиту скидуємо помилку
+        state.isLoading = true;
+        state.isError = false;
       })
       .addCase(apiGetContacts.fulfilled, (state, action) => {
-        state.loading = false; // Якщо дані завантажились успішнно вимкнули індикатор завантажння
-        state.items = action.payload; // встановили необхідні дані (дані беруться після ретурну Thunk)
+        state.isLoading = false; // Якщо дані завантажились успішнно вимкнули індикатор завантажння
+        state.contacts = action.payload; // встановили необхідні дані (дані беруться після ретурну Thunk)
         // state.items.push(action.payload);
         // state.items = state.items.filter(
         //   (item) => item.id !== action.payload.id
         // );
       })
       .addCase(apiGetContacts.rejected, (state) => {
-        state.loading = false;
-        state.error = true;
+        state.isLoading = false;
+        state.isError = true;
       })
-      .addCase(apiPostContacts.pending, (state) => {
-        state.loading = true;
-        state.error = false;
+      // 2. Опрацювання 3-х станів санки (apiAddContact) на додавання контактів
+      .addCase(apiAddContact.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
       })
-      .addCase(apiPostContacts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.items.push(action.payload);
+      .addCase(apiAddContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.contacts.push(action.payload); // новий об'єкт з контактами додаємо в масив
       })
-      .addCase(apiPostContacts.rejected, (state) => {
-        state.loading = false;
-        state.error = true;
+      .addCase(apiAddContact.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       })
-      .addCase(apiDeleteContacts.pending, (state) => {
-        state.loading = true;
-        state.error = false;
+      // 3. Опрацювання 3-х станів санки (apiDeleteContact) на видалення контакту по id
+      .addCase(apiDeleteContact.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
       })
-      .addCase(apiDeleteContacts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.items = state.items.filter(
-          (item) => item.id !== action.payload.id
+      .addCase(apiDeleteContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.contacts = state.contacts.filter(
+          (contact) => contact.id !== action.payload.id
         );
       })
-      .addCase(apiDeleteContacts.rejected, (state) => {
-        state.loading = false;
-        state.error = true;
+      .addCase(apiDeleteContact.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       }),
 });
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectNameFilter],
-  (items, name) =>
-    items.filter((item) => item.name.toLowerCase().includes(name.toLowerCase()))
+  (contacts, name) =>
+    contacts.filter((item) =>
+      item.name.toLowerCase().includes(name.toLowerCase())
+    )
 );
 
 // Редюсер слайсу
-export const detailsContactsReducer = detailsContactsSlice.reducer;
+export const phoneBookSliceReducer = phoneBookSlice.reducer;

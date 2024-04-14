@@ -1,10 +1,12 @@
 import "./App.css";
 import { useDispatch } from "react-redux";
-import { apiGetContacts } from "./redux/contacts/operations";
 import { Suspense, lazy, useEffect } from "react";
 import Loading from "./components/Loading/Loading";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
+import { apiRefreshUser } from "./redux/auth/operations";
+import RestrictedRoute from "./RestrictedRoute/RestrictedRoute";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 const Home = lazy(() => import("./pages/Home/Home"));
 const Contacts = lazy(() => import("./pages/Contacts/Contacts"));
 const Login = lazy(() => import("./pages/Login/Login"));
@@ -13,7 +15,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(apiGetContacts());
+    dispatch(apiRefreshUser());
   }, [dispatch]);
 
   return (
@@ -21,9 +23,30 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Registration />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/contacts" element={<Contacts />} />
+          <Route
+            path="/register"
+            element={
+              <RestrictedRoute>
+                <Registration />
+              </RestrictedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RestrictedRoute>
+                <Login />
+              </RestrictedRoute>
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute>
+                <Contacts />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </Layout>

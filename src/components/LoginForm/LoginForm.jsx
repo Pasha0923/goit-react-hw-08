@@ -15,7 +15,7 @@ const UserLoginSchema = Yup.object().shape({
 });
 const LoginForm = ({ onLogin }) => {
   const handleSubmit = (data, actions) => {
-    onLogin(data); // Викликаємо функцію onRegister і передаємо їй дані(збираємо дані з форми)
+    onLogin(data); // Викликаємо функцію onLoginі передаємо їй дані(збираємо дані з форми)
     actions.resetForm();
   };
   return (

@@ -1,0 +1,11 @@
+.div {
+  display: flex;
+  gap: 12px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.text {
+  color: white;
+  font-size: 18px;
+}

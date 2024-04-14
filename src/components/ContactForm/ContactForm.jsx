@@ -1,8 +1,9 @@
 import { Formik, ErrorMessage, Field, Form } from "formik";
 import css from "./ContactForm.module.css";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { apiPostContacts } from "../../redux/contacts/operations";
+import toast from "react-hot-toast";
+// import { useDispatch } from "react-redux";
+// import { apiPostContacts } from "../../redux/contacts/operations";
 const INITIAL_FORM_DATA = {
   name: "",
   number: "",
@@ -18,14 +19,11 @@ const contactFormSchema = Yup.object().shape({
     .max(50, "Too long!")
     .required("Required!"),
 });
-const ContactForm = () => {
-  // Команду на виконная коду блоку редбюсерів (зміну state)
-  // надсилаємо через хук Dispatch
-  const dispatch = useDispatch();
-  const handleSubmit = (values, actions) => {
-    console.log("values: ", values);
-    dispatch(apiPostContacts(values));
-    actions.resetForm();
+const ContactForm = ({ onAddContact }) => {
+  const handleSubmit = (data, formActions) => {
+    toast.success("Contact was add success");
+    onAddContact(data);
+    formActions.resetForm();
   };
   return (
     <Formik
@@ -59,7 +57,7 @@ const ContactForm = () => {
           />
         </label>
         <button className={css.btnAdd} type="submit">
-          Add contact
+          Add new contact
         </button>
       </Form>
     </Formik>

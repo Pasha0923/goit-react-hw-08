@@ -1,31 +1,25 @@
-import clsx from "clsx";
-import { NavLink } from "react-router-dom";
-import css from "./Layout.module.css";
-const getNavLinkClassNames = ({ isActive }) =>
-  clsx(css.headerLink, {
-    [css.active]: isActive,
-  });
+import { Suspense } from "react";
+import AppBar from "../AppBar/AppBar";
+import { Toaster } from "react-hot-toast";
+import Loading from "../Loading/Loading";
 
 const Layout = ({ children }) => {
   return (
     <div>
-      <header className={css.header}>
-        <NavLink className={getNavLinkClassNames} to="/">
-          Home
-        </NavLink>
-        <NavLink className={getNavLinkClassNames} to="/login">
-          Login
-        </NavLink>
-        <NavLink className={getNavLinkClassNames} to="/register">
-          Register
-        </NavLink>
-        <NavLink className={getNavLinkClassNames} to="/contacts">
-          Contacts
-        </NavLink>
-      </header>
-      <main>{children}</main>
+      <AppBar />
+      <Suspense fallback={<Loading />}>{children}</Suspense>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: "#f9e3cc",
+            color: "#f57a38",
+            marginTop: "25px",
+          },
+        }}
+      />
     </div>
   );
 };
-
 export default Layout;

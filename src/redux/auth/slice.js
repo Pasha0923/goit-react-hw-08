@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { apiLoginUser, apiRefreshUser, apiRegisterUser } from "./operations";
+import {
+  apiLoginUser,
+  apiLogoutUser,
+  apiRefreshUser,
+  apiRegisterUser,
+} from "./operations";
 // Те що поверне Thunka будемо використовувати в extraReducers
 const INITIAL_STATE = {
   user: {
@@ -40,14 +45,28 @@ const authSlice = createSlice({
       })
       .addCase(apiLoginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.userData = action.payload.user;
-        // state.token = action.payload.token;
-        // state.isSignedIn = true;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
       })
       .addCase(apiLoginUser.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
       })
+      //    LOGOUT
+      .addCase(apiLogoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      // під час успішного logout повернути початковий стан об'єкту
+      .addCase(apiLogoutUser.fulfilled, () => {
+        return INITIAL_STATE;
+      })
+      .addCase(apiLogoutUser.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      })
+
       //   REFRESH
       .addCase(apiRefreshUser.pending, (state) => {
         state.isRefreshing = true;
@@ -55,8 +74,8 @@ const authSlice = createSlice({
       })
       .addCase(apiRefreshUser.fulfilled, (state, action) => {
         state.isRefreshing = false;
-        state.userData = action.payload;
-        state.isSignedIn = true;
+        state.user = action.payload;
+        state.isLoggedIn = true;
       })
       .addCase(apiRefreshUser.rejected, (state) => {
         state.isRefreshing = false;
