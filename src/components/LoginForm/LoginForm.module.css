@@ -22,6 +22,10 @@
 .formInput {
   padding: 8px 15px;
 }
+.passwordIcon {
+  margin-top: -32px;
+  margin-left: 282px;
+}
 .btnAdd {
   margin-left: 0 auto;
   /* background-color: yellow; */

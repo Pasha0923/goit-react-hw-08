@@ -2,6 +2,10 @@ import { Formik, ErrorMessage, Field, Form } from "formik";
 import css from "./RegistrationForm.module.css";
 import * as Yup from "yup";
 import { IoPersonAddSharp } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { apiRegisterUser } from "../../redux/auth/operations";
+import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
+import { useState } from "react";
 const INITIAL_FORM_DATA = {
   name: "",
   email: "",
@@ -18,9 +22,14 @@ const UserRegisterSchema = Yup.object().shape({
     .required("Password is required!")
     .min(8, "Password must be at least 8 characters!"),
 });
-const RegisterForm = ({ onRegister }) => {
-  const handleSubmit = (data, actions) => {
-    onRegister(data); // Викликаємо функцію onRegister і передаємо їй дані(збираємо дані з форми)
+const RegisterForm = () => {
+  const dispatch = useDispatch();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(null);
+  const handleTogglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  const handleSubmit = (formData, actions) => {
+    dispatch(apiRegisterUser(formData)); // Викликаємо сервіс реєстрації і передаємо йому дані з форми)
     actions.resetForm();
   };
   return (
@@ -60,9 +69,21 @@ const RegisterForm = ({ onRegister }) => {
           <Field
             className={css.formInput}
             placeholder="Please enter your password"
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
             name="password"
           />
+          {isPasswordVisible ? (
+            <PiEyeBold
+              className={css.passwordIcon}
+              onClick={handleTogglePasswordVisibility}
+            />
+          ) : (
+            <PiEyeClosedBold
+              className={css.passwordIcon}
+              onClick={handleTogglePasswordVisibility}
+            />
+          )}
+
           <ErrorMessage
             className={css.errorMsg}
             name="password"

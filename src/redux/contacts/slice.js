@@ -2,6 +2,7 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { apiAddContact, apiDeleteContact, apiGetContacts } from "./operations";
 import { selectContacts } from "./selectors";
 import { selectNameFilter } from "../filters/selectors";
+import { apiLogoutUser } from "../auth/operations";
 
 const INITIAL_STATE_CONTACTS = {
   contacts: [],
@@ -22,9 +23,9 @@ const phoneBookSlice = createSlice({
       .addCase(apiGetContacts.fulfilled, (state, action) => {
         state.isLoading = false; // Якщо дані завантажились успішнно вимкнули індикатор завантажння
         state.contacts = action.payload; // встановили необхідні дані (дані беруться після ретурну Thunk)
-        // state.items.push(action.payload);
-        // state.items = state.items.filter(
-        //   (item) => item.id !== action.payload.id
+        // state.contacts.push(action.payload);
+        // state.contacts = state.contacts.filter(
+        //   (contact) => contact.id !== action.payload.id
         // );
       })
       .addCase(apiGetContacts.rejected, (state) => {
@@ -56,6 +57,20 @@ const phoneBookSlice = createSlice({
         );
       })
       .addCase(apiDeleteContact.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      })
+      // 4. Опрацювання 3-х станів санки (apiLogoutUser) для очищення стану контактів
+      //при виході користувача із системи
+      .addCase(apiLogoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      // під час успішного logout повернули початковий стан об'єкту
+      .addCase(apiLogoutUser.fulfilled, () => {
+        return INITIAL_STATE_CONTACTS;
+      })
+      .addCase(apiLogoutUser.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
       }),

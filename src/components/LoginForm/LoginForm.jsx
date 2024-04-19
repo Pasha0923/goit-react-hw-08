@@ -1,7 +1,12 @@
 import { Formik, ErrorMessage, Field, Form } from "formik";
 import css from "./LoginForm.module.css";
 import * as Yup from "yup";
-
+import { useDispatch } from "react-redux";
+import { apiLoginUser } from "../../redux/auth/operations";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { PiEyeClosedBold } from "react-icons/pi";
+import { PiEyeBold } from "react-icons/pi";
 const INITIAL_FORM_DATA = {
   email: "",
   password: "",
@@ -13,10 +18,23 @@ const UserLoginSchema = Yup.object().shape({
     .required("Password is required!")
     .min(8, "Password must be at least 8 characters!"),
 });
-const LoginForm = ({ onLogin }) => {
-  const handleSubmit = (data, actions) => {
-    onLogin(data); // Викликаємо функцію onLoginі передаємо їй дані(збираємо дані з форми)
-    actions.resetForm();
+const LoginForm = () => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const handleTogglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  const dispatch = useDispatch();
+  const handleSubmit = (formData, formActions) => {
+    console.log("formData: ", formData);
+    dispatch(apiLoginUser(formData)) // Викликаємо сервіс логінізаціії і передаємо йому дані з форми
+      .unwrap()
+      .then(() => {
+        toast.success("login success");
+      })
+      .catch(() => {
+        toast.error("Error ! Please enter correct login ");
+      });
+    formActions.resetForm();
   };
   return (
     <Formik
@@ -45,9 +63,20 @@ const LoginForm = ({ onLogin }) => {
           <Field
             className={css.formInput}
             placeholder="Please enter your password"
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
             name="password"
           />
+          {isPasswordVisible ? (
+            <PiEyeBold
+              className={css.passwordIcon}
+              onClick={handleTogglePasswordVisibility}
+            />
+          ) : (
+            <PiEyeClosedBold
+              className={css.passwordIcon}
+              onClick={handleTogglePasswordVisibility}
+            />
+          )}
           <ErrorMessage
             className={css.errorMsg}
             name="password"
